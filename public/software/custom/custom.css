@@ -1,0 +1,381 @@
+@import url('root.css');
+
+.w-10 {
+    width: 10% !important;
+}
+
+.w-15 {
+    width: 15% !important;
+}
+
+.w-20 {
+    width: 20% !important;
+}
+
+.w-25 {
+    width: 25% !important;
+}
+
+.w-30 {
+    width: 30% !important;
+}
+
+.w-35 {
+    width: 35% !important;
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+.w-60 {
+    width: 60% !important;
+}
+
+.w-70 {
+    width: 70% !important;
+}
+
+.w-80 {
+    width: 80% !important;
+}
+
+.w-90 {
+    width: 90% !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+
+.layout-menu img {
+    width: 100% !important;
+    padding: 1rem;
+}
+
+.layout-menu .main-logo {
+    width: 100% !important;
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+}
+
+.layout-menu .small-logo {
+    display: none;
+    width: 25%;
+    padding-right: 0.5rem !important;
+    padding-left: 0.5rem !important;
+}
+
+
+
+.layout-menu-collapsed .main-logo {
+    display: none;
+}
+
+.layout-menu-collapsed .small-logo {
+    display: block;
+}
+
+.layout-menu-collapsed.layout-menu-hover .main-logo {
+    display: block;
+}
+
+.layout-menu-collapsed.layout-menu-hover .small-logo {
+    display: none;
+}
+
+.bg-menu-theme.menu-vertical .menu-item.active>.menu-link:not(.menu-toggle) {
+    background: linear-gradient(92deg, var(--bs-primary) 22.16%, var(--bs-primary-light3) 76.47%)
+}
+
+.breadcrumb-item,
+.breadcrumb-item a {
+    color: var(--bs-primary) !important;
+}
+
+a:hover {
+    color: var(--bs-primary-light) !important;
+}
+
+.breadcrumb-item,
+.breadcrumb-item.active {
+    color: var(--bs-breadcrumb-item-active-color) !important;
+}
+
+.btn-primary:hover {
+    color: #fff !important;
+    background-color: var(--bs-primary-light) !important;
+    border-color: var(--bs-primary-light3) !important;
+}
+
+.btn-light {
+    color: #fff;
+    background-color: var(--bs-primary-light);
+    border-color: var(--bs-primary-light);
+}
+
+.readonly-look {
+    background-color: #e9ecef !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.dots-loader {
+    display: flex;
+    gap: 8px;
+}
+
+.dots-loader div {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.dots-loader div:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dots-loader div:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dot-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dot-loader span {
+    width: 10px;
+    height: 10px;
+    background-color: #007bff;
+    border-radius: 50%;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.dot-loader span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.dot-loader span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-10px);
+        opacity: 0.5;
+    }
+}
+
+/* quotation print css */
+@media print {
+    .quotation_print .company_dv {
+        width: 100% !important;
+    }
+
+    .quotation_print .invoice_dv,
+    .quotation_print .billing_dv,
+    .quotation_print .shipping_dv,
+    .quotation_print .quotation_dv {
+        width: 25% !important;
+    }
+
+    .quotation_print .per {
+        float: right;
+    }
+
+    .quotation_print .invoice-preview .invoice-preview-header,
+    .quotation_print .invoice-edit .invoice-preview-header,
+    .quotation_print .invoice-add .invoice-preview-header {
+        background-color: #ced7e0dc !important;
+    }
+
+    .quotation_print .rounded {
+        border-radius: var(--bs-border-radius) !important;
+    }
+
+    .quotation_print .card-body {
+        flex: 1 1 auto;
+        padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+        color: var(--bs-card-color);
+    }
+
+    .quotation_print .main-logo {
+        margin-left: -6px;
+    }
+
+    .quotation_print .border-panel {
+        border-top: 3px solid #266BEE !important;
+        border-radius: 3px !important;
+    }
+
+    .quotation_print .text-right {
+        text-align: right !important;
+    }
+}
+
+.buy-now .btn-buy-now-primary {
+    position: fixed;
+    bottom: 3rem;
+    right: 1.5rem;
+    z-index: 1080;
+    box-shadow: 0 1px 20px 1px #266BEE !important;
+}
+
+.scrolling-text {
+    white-space: nowrap;
+    animation: scroll-left 30s linear infinite;
+    padding-left: 35%;
+    /* push text to right off-screen */
+}
+
+.scrolling-text h5 {
+    color: red !important;
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.expired-row {
+    background-color: #ffe5e5 !important;
+}
+
+.text-white-important {
+    color: #ffffff !important;
+}
+
+table.dataTable>tbody>tr.child ul.dtr-details {
+    width: 100%;
+}
+
+#show_add_btn:focus {
+    outline: 3px solid #003dff !important;
+    outline-offset: 3px;
+    box-shadow: 0 0 8px rgba(0, 61, 255, 0.5);
+}
+
+/* Normal Input, Select, Textarea */
+input:focus,
+select:focus,
+textarea:focus {
+    border: 2px solid #0A3A7E !important;
+    /* Darker blue */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Bootstrap form-control and form-select focus */
+.form-control:focus,
+.form-select:focus {
+    border-color: #0A3A7E !important;
+    /* Darker blue */
+}
+
+/* Select2 main box (when closed or focused) */
+.select2-container--default .select2-selection--single:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border: 2px solid #0A3A7E !important;
+    /* Match other focus borders */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Select2 dropdown search field — keep DEFAULT, no dark border */
+.select2-container--default .select2-search--dropdown .select2-search__field:focus {
+    border: 1px solid #ccc !important;
+    /* Keep default light border */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.select2-container--default.select2-container--focus .select2-selection,
+.select2-container--default.select2-container--open .select2-selection {
+    border-color: #0A3A7E !important;
+}
+
+.toast-custom-width {
+    width: 420px !important;
+    min-width: 380px !important;
+    padding-top: 20px !important;
+}
+
+#toast-container>.toast-info::before {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=) !important;
+    font-family: "FontAwesome";
+    position: absolute;
+    left: 15px;
+    top: 22px;
+    font-size: 24px;
+    color: white;
+    line-height: 1;
+
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#toast-container>.toast-info {
+    background-image: none !important;
+}
+
+.dataTable tbody tr:hover {
+    background-color: #f5f5f5 !important;
+    /* Material Blue */
+}
+
+
+/* Light gray background for Select2 dropdown hover/navigation */
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted {
+    background-color: #f7fafc !important;
+    /* Very light gray */
+    color: #2d3748 !important;
+    /* Dark gray text */
+}
+
+/* Alternative slightly darker gray */
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted {
+    background-color: #edf2f7 !important;
+    /* Light gray */
+    color: #2d3748 !important;
+}
+
+/* Or use this for a subtle gray similar to your table */
+.select2-container--default .select2-results__option--highlighted[aria-selected],
+.select2-container--default .select2-results__option--highlighted {
+    background-color: #e2e8f0 !important;
+    /* Subtle gray */
+    color: #1a202c !important;
+}

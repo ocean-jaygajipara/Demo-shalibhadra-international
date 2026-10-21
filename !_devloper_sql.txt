@@ -1,0 +1,484 @@
+# production
+cd shalibhadra-crm.oceaninfotechcrm.com/
+git pull origin main
+
+# development
+cd shalibhadra-crm.oceaninfotechcrm.com/
+git pull origin developer
+
+
+09-05-2026
+-- 1. Add is_qc_required to inwards table
+ALTER TABLE `inwards` ADD `is_qc_required` TINYINT(1) NOT NULL DEFAULT '0' AFTER `inward_date`;
+
+ 
+
+-- 2. Add is_qc_done to inward_items table
+ALTER TABLE `inward_items` ADD `is_qc_done` TINYINT(1) NOT NULL DEFAULT '1' AFTER `inward_quantity`;
+
+-- 3. Add inward_id and inward_item_id to qc_inspection table
+ALTER TABLE `qc_inspection` ADD `inward_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `job_work_receive_item_id`;
+ALTER TABLE `qc_inspection` ADD `inward_item_id` BIGINT UNSIGNED NULL DEFAULT NULL AFTER `inward_id`;
+
+|-------------------------------------------- Local
+
+
+17-02-2026
+ALTER TABLE `product_stock_history` CHANGE `total_quantity` `total_quantity` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `total_kg` `total_kg` DECIMAL(15,3) NULL DEFAULT NULL;
+ALTER TABLE `product_stock_history` CHANGE `credit` `credit` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `debit` `debit` DECIMAL(10,3) NULL DEFAULT NULL;
+
+
+22-01-2026
+ALTER TABLE `inward_items` ADD `product_weight` VARCHAR(255) NULL DEFAULT NULL AFTER `inward_quantity`;
+
+
+15-01-2026
+ALTER TABLE `followups` CHANGE `inquiry_id` `inquiry_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+13-01-2026
+ALTER TABLE `companies` ADD `lut_number` VARCHAR(255) NULL DEFAULT NULL AFTER `gst_no`;
+ALTER TABLE `packing_slip_item` CHANGE `total_qty` `total_qty` DECIMAL(12,3) NULL DEFAULT NULL, CHANGE `total_weight` `total_weight` DECIMAL(12,3) NULL DEFAULT NULL;
+ALTER TABLE `packing_slip_item` CHANGE `wt_pc` `wt_pc` DECIMAL(15,3) NULL DEFAULT NULL;
+ALTER TABLE `packing_slip_item` CHANGE `qty_pc` `qty_pc` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `org_qty_pc` `org_qty_pc` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `total_packet` `total_packet` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `qty_ctn` `qty_ctn` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `actual_wt_ctn` `actual_wt_ctn` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `total_qty` `total_qty` DECIMAL(15,3) NULL DEFAULT NULL, CHANGE `total_weight` `total_weight` DECIMAL(15,3) NULL DEFAULT NULL;
+
+08-01-2026
+ALTER TABLE `company_details` ADD `invoice_title` VARCHAR(50) NULL DEFAULT NULL AFTER `qc_inspection_color`, ADD `invoice_prefix` VARCHAR(50) NULL DEFAULT NULL AFTER `invoice_title`, ADD `invoice_color` VARCHAR(50) NULL DEFAULT NULL AFTER `invoice_prefix`;
+
+ALTER TABLE `eway_bills` DROP `distance`;
+
+06-01-2026
+ALTER TABLE `inquiries` CHANGE `platform_unique_id` `platform_unique_id` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+02-01-2026
+ALTER TABLE invoice
+ADD COLUMN irn VARCHAR(255) NULL AFTER transporter_gstin,
+ADD COLUMN ack_no VARCHAR(255) NULL AFTER irn,
+ADD COLUMN ack_date DATETIME NULL AFTER ack_no,
+ADD COLUMN signed_invoice LONGTEXT NULL AFTER ack_date,
+ADD COLUMN signed_qr_code LONGTEXT NULL AFTER signed_invoice,
+ADD COLUMN irn_status VARCHAR(50) NULL AFTER signed_qr_code,
+ADD COLUMN e_invoice_status VARCHAR(50) NULL AFTER irn_status,
+ADD COLUMN e_invoice_response LONGTEXT NULL AFTER e_invoice_status,
+ADD COLUMN irn_generated_at DATETIME NULL AFTER e_invoice_response;
+
+
+ALTER TABLE invoice
+ADD COLUMN cancel_date TIMESTAMP NULL AFTER irn_generated_at,
+ADD COLUMN cancel_reason VARCHAR(1) NULL AFTER cancel_date,
+ADD COLUMN cancel_remarks VARCHAR(100) NULL AFTER cancel_reason;
+
+
+29-12-2025
+ALTER TABLE `eway_bills` ADD `vehicle_update_response` TEXT NULL DEFAULT NULL AFTER `cancel_reason`;
+ALTER TABLE `eway_bills` ADD `lr_no` VARCHAR(255) NULL DEFAULT NULL AFTER `vehicle_update_response`, ADD `lr_date` DATE NULL DEFAULT NULL AFTER `lr_no`;
+ALTER TABLE `company_socials` ADD `email` VARCHAR(255) NULL DEFAULT NULL AFTER `username`;
+
+
+27-12-2025
+ALTER TABLE `companies` ADD `pincode` VARCHAR(255) NULL DEFAULT NULL AFTER `city_id`;
+
+
+26-12-2025
+ALTER TABLE `invoice_items` ADD `is_combo` TINYINT(1) NOT NULL DEFAULT '0' AFTER `id`;
+ALTER TABLE `eway_bills` ADD `cancelled_by` VARCHAR(255) NULL DEFAULT NULL AFTER `error_message`, ADD `cancel_reason` TEXT NULL DEFAULT NULL AFTER `cancelled_by`;
+
+
+
+25-12-2025
+ALTER TABLE `purchase_orders` ADD `vendor_name` VARCHAR(255) NULL DEFAULT NULL AFTER `vendor_id`;
+ALTER TABLE `inwards` ADD `vendor_name` VARCHAR(255) NULL DEFAULT NULL AFTER `vendor_id`;
+ALTER TABLE `invoice` ADD `customer_name` VARCHAR(255) NULL DEFAULT NULL AFTER `contact_person_name`;
+ALTER TABLE `quotation_items` ADD `is_combo` TINYINT(1) NOT NULL DEFAULT '0' AFTER `id`;
+ALTER TABLE `product_combos` ADD `part_no` VARCHAR(255) NULL DEFAULT NULL AFTER `price`;
+
+
+24-12-2025
+ALTER TABLE `packing_slip_item` ADD `is_combo` TINYINT(1) NOT NULL DEFAULT '0' AFTER `id`;
+
+23-12-2025
+ALTER TABLE `sales_orders` ADD `customer_name` VARCHAR(255) NULL DEFAULT NULL AFTER `contact_person_name`;
+ALTER TABLE `quotations` ADD `customer_name` VARCHAR(255) NULL DEFAULT NULL AFTER `customer_id`;
+ALTER TABLE `packing_slips` ADD `shipping_address` TEXT NULL DEFAULT NULL AFTER `address`, ADD `billing_address` TEXT NULL DEFAULT NULL AFTER `shipping_address`;
+
+
+22-12-2025
+ALTER TABLE `packing_slips` ADD `total_no_of_carton` VARCHAR(255) NULL AFTER `sales_order_no`;
+20-12-2025
+
+ALTER TABLE `followups` ADD `quotation_id` VARCHAR(255) NULL DEFAULT NULL AFTER `inquiry_id`, ADD `customer_id` VARCHAR(255) NULL DEFAULT NULL AFTER `quotation_id`;
+
+
+ALTER TABLE `invoice` ADD `generate_eway` TINYINT(1) NOT NULL DEFAULT '0' AFTER `longitude`, ADD `eway_bill_no` VARCHAR(255) NULL DEFAULT NULL AFTER `generate_eway`, ADD `eway_bill_status` ENUM('PENDING','GENERATED','CANCELLED') NULL DEFAULT NULL AFTER `eway_bill_no`, ADD `distance` DECIMAL(10,3) NULL DEFAULT NULL AFTER `eway_bill_status`, ADD `vehicle_no` VARCHAR(255) NULL DEFAULT NULL AFTER `distance`, ADD `vehicle_type` ENUM('R','RW','O') NULL DEFAULT NULL AFTER `vehicle_no`, ADD `transporter_id` VARCHAR(255) NULL DEFAULT NULL AFTER `vehicle_type`, ADD `transporter_name` VARCHAR(255) NULL DEFAULT NULL AFTER `transporter_id`, ADD `transporter_gstin` VARCHAR(255) NULL DEFAULT NULL AFTER `transporter_name`;
+
+ALTER TABLE `invoice` ADD `eway_bill_id` VARCHAR(255) NULL DEFAULT NULL AFTER `generate_eway`;
+
+
+
+19-12-2025
+ALTER TABLE `company_socials` ADD `gstin` VARCHAR(255) NULL DEFAULT NULL AFTER `json_response`, ADD `username` VARCHAR(255) NULL DEFAULT NULL AFTER `gstin`, ADD `password` VARCHAR(255) NULL DEFAULT NULL AFTER `username`, ADD `api_client_id` VARCHAR(255) NULL DEFAULT NULL AFTER `password`, ADD `api_client_secret` VARCHAR(255) NULL DEFAULT NULL AFTER `api_client_id`;
+
+
+18-12-2025
+ALTER TABLE `companies` ADD `invoice_letter_head` TEXT NULL DEFAULT NULL AFTER `order_footer_logo`;
+
+
+16-12-2025
+ALTER TABLE `product_combos` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `display_unit_id`;
+ALTER TABLE `product_combo_items` CHANGE `price` `price` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `product_combo_items` ADD `order_type` VARCHAR(255) NULL DEFAULT NULL AFTER `product_variant_price_id`;
+
+ALTER TABLE `product_combos` ADD `gross_wt` DECIMAL(15,3) NULL DEFAULT NULL AFTER `price`, ADD `net_wt` DECIMAL(15,3) NULL DEFAULT NULL AFTER `gross_wt`, ADD `grosse_per_qty` INT(11) NULL DEFAULT NULL AFTER `net_wt`;
+
+ALTER TABLE `product_combos` ADD `hsn_code` VARCHAR(255) NULL DEFAULT NULL AFTER `grosse_per_qty`, ADD `product_tax_id` VARCHAR(255) NULL DEFAULT NULL AFTER `hsn_code`;
+
+ALTER TABLE `sales_order_items` ADD `is_combo` TINYINT(1) NOT NULL DEFAULT '0' AFTER `company_id`;
+ALTER TABLE `product_stock_history` ADD `is_combo` TINYINT(1) NOT NULL DEFAULT '0' AFTER `product_variant_price_id`;
+
+
+15-12-2025
+ALTER TABLE `job_work_issue` ADD `vehicle_no` VARCHAR(255) NULL DEFAULT NULL AFTER `job_work_issue_no`;
+
+ALTER TABLE job_work_order
+ADD COLUMN total_taxable DECIMAL(10,2) NULL AFTER term_and_condition,
+ADD COLUMN is_gst_applicable VARCHAR(10) DEFAULT 'yes' AFTER total_taxable,
+ADD COLUMN gst_amount DECIMAL(10,2) NULL AFTER is_gst_applicable,
+ADD COLUMN is_tcs_applicable VARCHAR(10) DEFAULT 'no' AFTER gst_amount,
+ADD COLUMN tcs_amount DECIMAL(10,2) NULL AFTER is_tcs_applicable,
+ADD COLUMN round_off DECIMAL(10,2) NULL AFTER tcs_amount,
+ADD COLUMN grand_total DECIMAL(10,2) NULL AFTER round_off,
+ADD COLUMN master_quantity DECIMAL(10,2) NULL AFTER grand_total,
+ADD COLUMN master_amount DECIMAL(10,2) NULL AFTER master_quantity,
+ADD COLUMN master_taxable_amount DECIMAL(10,2) NULL AFTER master_amount,
+ADD COLUMN master_gst_amount DECIMAL(10,2) NULL AFTER master_taxable_amount,
+ADD COLUMN master_sub_total DECIMAL(10,2) NULL AFTER master_gst_amount;
+
+
+ALTER TABLE job_work_order_items
+ADD COLUMN price_in_amount DECIMAL(10,2) NULL AFTER unit,
+ADD COLUMN discount_flat DECIMAL(10,2) NULL AFTER price_in_amount,
+ADD COLUMN discount_percentage DECIMAL(10,2) NULL AFTER discount_flat,
+ADD COLUMN rate_in_amount DECIMAL(10,2) NULL AFTER discount_percentage,
+ADD COLUMN amount DECIMAL(10,2) NULL AFTER rate_in_amount,
+ADD COLUMN taxable_amount DECIMAL(10,2) NULL AFTER amount,
+ADD COLUMN gst_in_percentage DECIMAL(10,2) NULL AFTER taxable_amount,
+ADD COLUMN gst_amount DECIMAL(10,2) NULL AFTER gst_in_percentage,
+ADD COLUMN cgst_in_percentage DECIMAL(10,2) NULL AFTER gst_amount,
+ADD COLUMN cgst_amount DECIMAL(10,2) NULL AFTER cgst_in_percentage,
+ADD COLUMN sgst_in_percentage DECIMAL(10,2) NULL AFTER cgst_amount,
+ADD COLUMN sgst_amount DECIMAL(10,2) NULL AFTER sgst_in_percentage,
+ADD COLUMN sub_total DECIMAL(10,2) NULL AFTER sgst_amount;
+
+
+
+
+13-12-2025
+ALTER TABLE `product_bom` ADD `bom_product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `product_id`, ADD `bom_product_variant_price_id` VARCHAR(255) NULL DEFAULT NULL AFTER `bom_product_category_id`;
+
+
+11-12-2025
+ALTER TABLE `job_work_receive_items` ADD `incoming_scrap` DECIMAL(10,3) NULL DEFAULT NULL AFTER `bl_percentage`;
+ALTER TABLE `product_stock_history` ADD `job_work_receive_id` VARCHAR(255) NULL DEFAULT NULL AFTER `job_work_issue_id`;
+
+
+
+10-12-2025
+ALTER TABLE `packing_slip_item` CHANGE `wt_pc` `wt_pc` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `qty_pc` `qty_pc` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `org_qty_pc` `org_qty_pc` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `total_packet` `total_packet` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `qty_ctn` `qty_ctn` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `actual_wt_ctn` `actual_wt_ctn` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `total_qty` `total_qty` DECIMAL(8,3) NULL DEFAULT NULL, CHANGE `total_weight` `total_weight` DECIMAL(8,3) NULL DEFAULT NULL;
+
+ALTER TABLE `companies` ADD `invoice_view_format` VARCHAR(50) NULL DEFAULT NULL AFTER `purchaseOrder_view_format`;
+
+ALTER TABLE `master_transport_detail` ADD `transport_gst_id` VARCHAR(255) NULL DEFAULT NULL AFTER `name`;
+
+
+
+
+|-------------------------------------------- On Development
+09-12-2025
+ALTER TABLE `job_work_issue_items` CHANGE `gross_weight` `gross_weight` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `issue_weight` `issue_weight` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `remaining_weight` `remaining_weight` DECIMAL(10,3) NULL DEFAULT NULL;
+
+ALTER TABLE `job_work_issue` CHANGE `master_total_pending` `master_total_pending` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `total_packing_weight` `total_packing_weight` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `total_item_weight` `total_item_weight` DECIMAL(10,3) NULL DEFAULT NULL, CHANGE `total_gross_weight` `total_gross_weight` DECIMAL(10,3) NULL DEFAULT NULL;
+
+
+
+ALTER TABLE `invoice` CHANGE `invoice_type` `invoice_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'tax, merchant';
+php artisan migrate:refresh --path=database/migrations/2025_12_09_115650_add_invoice_type_to_invoice_table.php
+
+08-12-2025
+ALTER TABLE product_stock_history ADD COLUMN stock_type VARCHAR(255) NOT NULL DEFAULT 'qty' AFTER debit;
+
+04-12-2025
+ALTER TABLE `product_stock_history` CHANGE `total_quantity` `total_quantity` DECIMAL(15,2) NULL DEFAULT NULL;
+ALTER TABLE `plan_masters` CHANGE `app_right` `app_right` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `panel_right` `panel_right` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `product_stock_history` CHANGE `total_kg` `total_kg` DECIMAL(15,2) NULL DEFAULT NULL;
+ALTER TABLE `sales_order_items` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+ALTER TABLE `quotation_items` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+ALTER TABLE `purchase_order_items` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+ALTER TABLE `job_work_order_items` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+ALTER TABLE `grn_item` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+ALTER TABLE `invoice_items` CHANGE `quantity` `quantity` DECIMAL(10,3) NULL DEFAULT NULL;
+
+
+
+03-12-2025
+ALTER TABLE `sales_order_items` CHANGE `remaining_quantity` `remaining_quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+ALTER TABLE `job_work_order_items` CHANGE `product_stock` `product_stock` VARCHAR(255) NULL DEFAULT NULL;
+
+
+02-12-2025
+ALTER TABLE `qc_inspection` ADD `available_qty` VARCHAR(255) NULL DEFAULT NULL AFTER `rejection_qty`;
+ALTER TABLE `sales_order_items` ADD `completation_time_adjustment_quantity` INT(11) NULL DEFAULT NULL AFTER `remaining_quantity`;
+
+
+
+01-12-2025
+ALTER TABLE `job_work_receive` ADD `warehouse_id` VARCHAR(255) NULL DEFAULT NULL AFTER `product_category_id`;
+
+
+27-11-2025
+ALTER TABLE `job_work_issue` ADD `warehouse_id` VARCHAR(255) NULL DEFAULT NULL AFTER `product_category_id`;
+ALTER TABLE `qc_inspection` ADD `warehouse_id` VARCHAR(255) NULL DEFAULT NULL AFTER `address`;
+ALTER TABLE `packing_slips` ADD `warehouse_id` VARCHAR(255) NULL DEFAULT NULL AFTER `customer_id`;
+
+ALTER TABLE `quotation_items` ADD `product_code` VARCHAR(255) NULL DEFAULT NULL AFTER `product_name`;
+ALTER TABLE `sales_order_items` ADD `product_code` VARCHAR(255) NULL DEFAULT NULL AFTER `product_name`;
+ALTER TABLE `purchase_order_items` ADD `product_code` VARCHAR(255) NULL DEFAULT NULL AFTER `product_name`;
+ALTER TABLE `invoice_items` ADD `product_code` VARCHAR(255) NULL DEFAULT NULL AFTER `product_name`;
+
+01-12-2025
+php artisan migrate
+
+26-11-2025
+ALTER TABLE `sales_order_items` CHANGE `remaining_quantity` `remaining_quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+
+26-11-2025
+ALTER TABLE `qc_inspection` ADD `wt_pc` DECIMAL(10,2) NULL DEFAULT NULL AFTER `ok_qty`, ADD `rejection_qty` DECIMAL(10,2) NULL DEFAULT NULL AFTER `wt_pc`;
+
+
+25-11-2025
+ALTER TABLE `job_work_receive` ADD `product_category_id` VARCHAR(255) NULL AFTER `vendor_id`;
+
+24-11-2025
+ALTER TABLE `sales_order_items` ADD `cgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `gst_amount`, ADD `cgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_in_percentage`, ADD `sgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_amount`, ADD `sgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `sgst_in_percentage`;
+
+ALTER TABLE `quotation_items` ADD `cgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `gst_amount`, ADD `cgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_in_percentage`, ADD `sgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_amount`, ADD `sgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `sgst_in_percentage`;
+
+ALTER TABLE `invoice_items` ADD `cgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `gst_amount`, ADD `cgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_in_percentage`, ADD `sgst_in_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `cgst_amount`, ADD `sgst_amount` DECIMAL(10,2) NULL DEFAULT NULL AFTER `sgst_in_percentage`;
+
+
+
+20-11-2025
+ALTER TABLE `sales_orders` ADD COLUMN `is_full_packing` TINYINT(1) NOT NULL DEFAULT 0 AFTER `sales_status_id`;
+
+
+19-11-2025
+ALTER TABLE `product_stock_history` ADD `packing_slip_id` VARCHAR(255) NULL DEFAULT NULL AFTER `qc_inspection_id`;
+ALTER TABLE `packing_slip_item` ADD `hsn_code` VARCHAR(255) NULL DEFAULT NULL AFTER `box_no`, ADD `unit` VARCHAR(255) NULL DEFAULT NULL AFTER `hsn_code`;
+ALTER TABLE `packing_slip_item` ADD `org_qty_pc` DECIMAL(10,2) NULL DEFAULT NULL AFTER `qty_pc`;
+ALTER TABLE `invoice` ADD `packing_slip_id` VARCHAR(255) NULL DEFAULT NULL AFTER `term_condition_id`, ADD `sales_order_id` VARCHAR(255) NULL DEFAULT NULL AFTER `packing_slip_id`;
+
+19-11-2025
+ALTER TABLE `product_stock_history` ADD `qc_inspection_id` VARCHAR(255) NULL DEFAULT NULL AFTER `job_work_issue_id`;
+
+
+18-11-2025
+ALTER TABLE customers ADD is_prospect TINYINT(1) DEFAULT 0 after 'customer_type_id';
+ALTER TABLE customers MODIFY customer_type_id INT NULL;
+
+
+ALTER TABLE `sales_order_items` CHANGE `quantity` `quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+ALTER TABLE `product_stock_history` ADD `job_work_issue_id` VARCHAR(255) NULL DEFAULT NULL AFTER `inward_id`;
+ALTER TABLE `job_work_issue_items` CHANGE `product_name` `product_name` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+18-11-2025
+ALTER TABLE `purchase_order_items` ADD `total_kg` DECIMAL(10,2) NULL DEFAULT NULL AFTER `loose_quantity`;
+ALTER TABLE `inwards` ADD `warehouse_id` VARCHAR(255) NULL DEFAULT NULL AFTER `company_id`;
+ALTER TABLE `product_stock_history` ADD `dispatch_id` VARCHAR(255) NULL DEFAULT NULL AFTER `product_variant_price_id`;
+ALTER TABLE `product_stock_history` ADD `inward_id` VARCHAR(255) NULL DEFAULT NULL AFTER `dispatch_id`;
+
+
+15-11-2025
+ALTER TABLE `purchase_order_items` CHANGE `quantity` `quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+
+
+13-11-2025
+ALTER TABLE `product_stock_history` CHANGE `total_quantity` `total_quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+ALTER TABLE `product_stock_history` ADD `total_kg` DECIMAL(10,2) NULL DEFAULT NULL AFTER `total_quantity`;
+ALTER TABLE `product_stock_history` CHANGE `credit` `credit` DECIMAL(10,2) NULL DEFAULT NULL;
+ALTER TABLE `product_stock_history` CHANGE `debit` `debit` DECIMAL(10,2) NULL DEFAULT NULL;
+
+
+12-11-2025
+ALTER TABLE `qc_inspection` ADD `ok_qty` DECIMAL(10,2) NULL DEFAULT NULL AFTER `ok_weight`;
+
+
+
+11-11-2025
+ALTER TABLE `job_work_receive_items` CHANGE `wt_pc` `wt_pc` DECIMAL(10,2) NULL DEFAULT NULL;
+
+
+28-10-2025
+ALTER TABLE `sales_statuses` CHANGE `salestype` `salestype` ENUM('Quotation','Sales Orders','Dispatch Orders','Packing Slip','Invoice','Purchase Order','Job Work Issue','GRN') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+
+27-10-2025
+php artisan migrate:refresh --path=/database/migrations/2025_06_07_162521_create_packing_slip_item_table.php
+php artisan migrate:refresh --path=/database/migrations/2025_06_03_105742_create_packing_slips_table.php
+
+
+
+14-10-2025
+ALTER TABLE `customers` CHANGE `contact_person_name` `contact_person_name` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `mobile_number` `mobile_number` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `customer_assign_areas` CHANGE `area_id` `area_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+14-10-2025
+ALTER TABLE `quotations` ADD `freight_charge` DECIMAL(10,2) NULL DEFAULT NULL AFTER `transport_charge`;
+
+
+10-10-2025
+ALTER TABLE `material_detail` CHANGE `size1` `size1` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size2` `size2` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size3` `size3` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size4` `size4` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size5` `size5` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size6` `size6` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size7` `size7` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size8` `size8` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size9` `size9` VARCHAR(255) NULL DEFAULT NULL, CHANGE `size10` `size10` VARCHAR(255) NULL DEFAULT NULL;
+
+ALTER TABLE `material_detail` CHANGE `size` `size` VARCHAR(255) NULL DEFAULT NULL, CHANGE `ltl` `ltl` VARCHAR(255) NULL DEFAULT NULL, CHANGE `utl` `utl` VARCHAR(255) NULL DEFAULT NULL;
+
+
+10-10-2025
+ALTER TABLE `job_work_receive_items` CHANGE `quantity` `quantity` DECIMAL(10,2) NULL DEFAULT NULL;
+
+
+09-10-2025
+ALTER TABLE `manage_email` DROP INDEX `manage_email_company_id_unique`;
+
+INSERT INTO `manage_email` (`id`, `company_id`, `module`, `ntype`, `name`, `subject`, `body`, `status`, `created_by`, `updated_by`, `created_at`, `updated_at`, `deleted_by`, `deleted_at`) VALUES
+(1, '2', 'Setting', 'forgot_password', 'Reset Password', 'Reset Password', '<figure class=\"table\">\n                <table>\n                    <tbody>\n                        <tr>\n                            <td style=\"padding:30px;text-align:center;\">\n                                <h2 style=\"margin-left:0;\">Hello !</h2>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td style=\"padding:30px;\">\n                                <p>You are receiving this email because we received a password reset request for your <strong>Ocean CRM</strong> account.</p>\n                                <p style=\"margin-left:0;text-align:center;\">[link]</p>\n                                <p>This password reset link will expire in <strong>60 minutes</strong>.</p>\n                                <p>If you did not request a password reset, no further action is required.</p>\n                                <p>Regards,&nbsp;<br><strong>Ocean CRM Team</strong></p>\n                            </td>\n                        </tr>\n                        <tr>\n                            <td style=\"background-color:#f1f1f1;padding:15px;text-align:center;\">\n                                © 2025 Ocean CRM. All rights reserved.\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n                </figure>', 'active', '2', '2', '2025-09-04 22:35:54', '2025-09-04 22:35:54', NULL, NULL),
+(2, '2', 'Job Work Order', 'joborder_send_pdf', 'Job Work Order  Send PDF', 'Job Work Order from [company_name]', '<p>Dear<strong> [customer_name]</strong>,</p><p>Thank you for considering<strong> [company_name]</strong> for your requirements.</p><p>Please find the attached Job Work Order for your reference. If you have any questions or need further clarification, feel free to contact us.</p><p>We look forward to the opportunity to serve you.</p><p>Best regards, &nbsp;<br><strong>[company_name]</strong></p>', 'active', '1', NULL, '2025-09-23 02:49:39', '2025-09-23 02:49:39', NULL, NULL),
+(3, '2', 'Job Work Issue', 'jobissue_send_pdf', 'Job Work Issue Send PDF', 'Job Work Issue from [company_name]', '<p>Dear<strong> [customer_name]</strong>,</p><p>Thank you for considering<strong> [company_name]</strong> for your requirements.</p><p>Please find the attached Job Work Issue for your reference. If you have any questions or need further clarification, feel free to contact us.</p><p>We look forward to the opportunity to serve you.</p><p>Best regards, &nbsp;<br><strong>[company_name]</strong></p>', 'active', '1', '1', '2025-09-25 05:28:46', '2025-09-25 05:38:52', NULL, NULL),
+(4, '2', 'QC Inspection Report', 'qcInspection_send_pdf', 'Qc Inspection Report Send PDF', 'Qc Inspection from [company_name]', '<p>Dear<strong> [customer_name]</strong>,</p><p>Thank you for considering<strong> [company_name]</strong> for your requirements.</p><p>Please find the attached Qc Inspection Report for your reference. If you have any questions or need further clarification, feel free to contact us.</p><p>We look forward to the opportunity to serve you.</p><p>Best regards, &nbsp;<br><strong>[company_name]</strong></p>', 'active', '1', '1', '2025-09-25 05:28:46', '2025-10-09 09:15:39', NULL, NULL);
+
+
+
+08-10-2025
+ALTER TABLE `job_work_issue` ADD `master_total_pending` DECIMAL(10,2) NULL DEFAULT NULL AFTER `remarks`;
+
+
+07-10-2025
+ALTER TABLE `job_work_order` DROP `sub_total`, DROP `is_gst_applicable`, DROP `gst_amount`, DROP `grand_total`, DROP `remarks`;
+ALTER TABLE `job_work_order_items` DROP `alter_quantity`, DROP `rate_in_amount`, DROP `amount`, DROP `delivered_date`, DROP `complete`, DROP `remarks`;
+ALTER TABLE `job_work_issue_items` DROP `wt_pc`;
+ALTER TABLE `job_work_receive` DROP `challan_no`, DROP `challan_date`;
+ALTER TABLE `job_work_receive_items` DROP `packing_name`;
+
+ALTER TABLE `material_detail`
+ADD `size1` DECIMAL(8,2) NULL AFTER `instrument`,
+ADD `size2` DECIMAL(8,2) NULL AFTER `size1`,
+ADD `size3` DECIMAL(8,2) NULL AFTER `size2`,
+ADD `size4` DECIMAL(8,2) NULL AFTER `size3`,
+ADD `size5` DECIMAL(8,2) NULL AFTER `size4`,
+ADD `size6` DECIMAL(8,2) NULL AFTER `size5`,
+ADD `size7` DECIMAL(8,2) NULL AFTER `size6`,
+ADD `size8` DECIMAL(8,2) NULL AFTER `size7`,
+ADD `size9` DECIMAL(8,2) NULL AFTER `size8`,
+ADD `size10` DECIMAL(8,2) NULL AFTER `size9`;
+
+
+06-10-2025
+ALTER TABLE `qc_inspection` DROP `product_godown_id`, DROP `location_id`;
+
+04-10-2025
+ALTER TABLE `material_detail` CHANGE `dimension` `dimension` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `job_work_receive_items` ADD `qc_check_weight` DECIMAL(10,2) NULL DEFAULT NULL AFTER `used_weight`;
+
+03-10-2025
+ALTER TABLE `company_details` ADD `qc_inspection_title` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_receive_color`, ADD `qc_inspection_prefix` VARCHAR(50) NULL DEFAULT NULL AFTER `qc_inspection_title`, ADD `qc_inspection_color` VARCHAR(50) NULL DEFAULT NULL AFTER `qc_inspection_prefix`;
+
+02-10-2025
+ALTER TABLE `products` ADD `grosse_per_qty` INT(11) NULL DEFAULT NULL AFTER `hsn_code`;
+
+29-09-2025
+ALTER TABLE `vendors` ADD `pan_number` VARCHAR(255) NULL DEFAULT NULL AFTER `vendor_code`, ADD `uan_number` VARCHAR(255) NULL DEFAULT NULL AFTER `pan_number`;
+ALTER TABLE `job_work_issue` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `job_work_type_id`;
+ALTER TABLE `job_work_order` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `vendor_id`;
+ALTER TABLE `purchase_orders` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `vendor_id`;
+ALTER TABLE `sales_orders` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `quotation_id`;
+ALTER TABLE `quotations` ADD `product_category_id` VARCHAR(255) NULL DEFAULT NULL AFTER `company_id`;
+ALTER TABLE `products` CHANGE `product_tax_id` `product_tax_id` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `job_work_type` ADD `bl_checkbox` TINYINT(1) NOT NULL DEFAULT '0' AFTER `name`, ADD `bl_percentage` DECIMAL(10,2) NULL DEFAULT NULL AFTER `bl_checkbox`;
+ALTER TABLE `customers` DROP `price_list_id`, DROP `birth_date`;
+ALTER TABLE `products` DROP `rej_percent`, DROP `product_godown_id`, DROP `product_rack_id`, DROP `remarks`, DROP `variant_of`;
+ALTER TABLE `job_work_receive_items` DROP `product_godown_id`, DROP `product_rack_id`;
+ALTER TABLE `job_work_issue_items` DROP `product_godown_id`, DROP `location_id`, DROP `last_process_id`;
+ALTER TABLE `products` CHANGE `min_stock` `min_stock` VARCHAR(255) NULL DEFAULT NULL;
+
+
+
+27-09-2025
+ALTER TABLE `job_work_receive` ADD `term_and_condition` TEXT NULL DEFAULT NULL AFTER `master_total_current_pending`;
+
+
+26-09-2025
+ALTER TABLE `job_work_receive_items` ADD `created_by` VARCHAR(255) NULL DEFAULT NULL AFTER `used_weight`, ADD `updated_by` VARCHAR(255) NULL DEFAULT NULL AFTER `created_by`, ADD `deleted_by` VARCHAR(255) NULL DEFAULT NULL AFTER `updated_by`;
+
+
+25-09-2025
+
+ALTER TABLE `sales_statuses` CHANGE `salestype` `salestype` ENUM('Quotation','Sales Orders','Dispatch Orders','Packing Slip','Invoice','Purchase Order','Job Work Issue') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+24-09-2025
+
+ALTER TABLE `company_details` CHANGE `inward_prefix` `inward_prefix` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `inward_title` `inward_title` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `inward_color` `inward_color` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_order_title` `job_work_order_title` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_order_prefix` `job_work_order_prefix` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_order_color` `job_work_order_color` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_issue_title` `job_work_issue_title` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_issue_prefix` `job_work_issue_prefix` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `job_work_issue_color` `job_work_issue_color` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+ALTER TABLE `company_details` ADD `job_work_receive_title` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_issue_color`, ADD `job_work_receive_prefix` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_receive_title`, ADD `job_work_receive_color` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_receive_prefix`;
+
+
+23-09-2025
+ALTER TABLE `mail_settings` ADD COLUMN `bcc` VARCHAR(255) NULL AFTER `from_name`;
+
+22-09-2025
+ALTER TABLE `company_details` ADD `job_work_issue_title` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_order_color`, ADD `job_work_issue_prefix` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_issue_title`, ADD `job_work_issue_color` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_issue_prefix`;
+
+20-09-2025
+ALTER TABLE `job_work_order` ADD `is_gst_applicable` VARCHAR(255) NOT NULL DEFAULT 'yes' AFTER `sub_total`;
+
+
+19-09-2025
+ALTER TABLE `company_details` ADD `job_work_order_title` VARCHAR(50) NULL DEFAULT NULL AFTER `inward_color`, ADD `job_work_order_prefix` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_order_title`, ADD `job_work_order_color` VARCHAR(50) NULL DEFAULT NULL AFTER `job_work_order_prefix`;
+
+ALTER TABLE `product_stock_history` CHANGE `product_subcategory_id` `product_subcategory_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL, CHANGE `product_variant_price_id` `product_variant_price_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+16-09-2025
+ALTER TABLE `sales_orders` ADD COLUMN `po_number` VARCHAR(255) NULL AFTER `term_condition_id`, ADD COLUMN `po_date` DATE NULL AFTER `po_number`;
+
+15-09-2025
+ALTER TABLE `customers` CHANGE `payment_terms_id` `payment_term_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE sales_orders ADD COLUMN freight_charge DECIMAL(10,2) NULL AFTER transport_charge;
+ALTER TABLE `customers` CHANGE `is_active` `is_active` TINYINT(1) NOT NULL DEFAULT '0';
+
+
+
+13-09-2025
+ALTER TABLE products ADD COLUMN product_tax_id INT NULL AFTER product_name;
+ALTER TABLE products ADD COLUMN display_unit_id INT NULL AFTER product_tax_id;
+
+
+
+12-09-2025
+
+ALTER TABLE customers ADD COLUMN pan_number VARCHAR(10) NULL AFTER gst_number, ADD COLUMN opening_balance DECIMAL(15,2) NOT NULL DEFAULT 0 AFTER pan_number,ADD COLUMN balance_type ENUM('Cr','Dr') NOT NULL DEFAULT 'Cr' AFTER opening_balance,ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1 AFTER balance_type;
+ALTER TABLE customers ADD COLUMN payment_terms_id BIGINT UNSIGNED NULL AFTER customer_type_id
+ALTER TABLE customers ADD COLUMN credit_days INT NOT NULL DEFAULT 0 AFTER payment_terms_id;
+ALTER TABLE `customers` CHANGE `payment_terms_id` `payment_terms_id` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;
+ALTER TABLE `customers` CHANGE `credit_days` `credit_days` INT(11) NULL DEFAULT '0';
+php artisan migrate:refresh --path=/database/migrations/2025_04_28_104853_create_customers_table.php
+
+
+04-09-2025
+php artisan migrate:refresh --path=/database/migrations/2025_05_01_041720_create_products_table.php
+php artisan migrate:refresh --path=/database/migrations/2025_09_08_154123_create_product_boms_table.php
+
+
+|-------------------------------------------- Live
+
+

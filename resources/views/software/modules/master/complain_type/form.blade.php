@@ -1,0 +1,116 @@
+@extends('software.layout.app')
+
+@php
+    use App\Models\Company;
+    $i = 0;
+    $page_title = isset($modules['title']) ? $modules['title'] : null;
+    $folder_path = isset($modules['folder_path']) ? $modules['folder_path'] : null;
+    $route = isset($modules['route']) ? $modules['route'] : null;
+    $company_id = isset($modules['company_id']) ? $modules['company_id'] : null;
+    // dd($modules);
+@endphp
+@section('title', $page_title)
+
+
+@section('content')
+    <div class="px-1">
+    <div class="d-flex flex-column flex-lg-row justify-content-lg-between align-items-start align-items-lg-center">
+        @include('software.inlcudes.breadcrumb', [
+            'breadcrumbArray' => [
+                ['title' => $page_title, 'url' => route($route . '.index')],
+                ['title' => (isset($edit) && $edit?->id) ? "Edit ".$page_title : "Create ".$page_title , 'url' => ''],
+            ],
+        ])
+        <a class="btn btn-primary waves-effect waves-light text-white" href="{{ url()->previous() }}">
+            <i class="menu-icon ti ti-chevrons-left"></i> Back
+        </a>
+    </div>
+</div>
+    <div class="card my-3 mb-4">
+        {{-- <h5 class="card-header"></h5> --}}
+        <div class="card-body">
+            <form
+                action="{{ isset($edit) && $edit?->id ? route($route . '.update', [$edit?->id]) : route($route . '.store') }}"
+                method="POST" enctype="multipart/form-data">
+                @csrf
+                @isset($edit)
+                    @method('PUT')
+                @endisset
+                <div class="row">
+                    @php
+
+                        $companies = Company::pluck('company_name', 'id'); // [id => name]
+                        $selectedCompanyId = old('company_id', $edit->company_id ?? '');
+                    @endphp
+
+                    @if (!$company_id)
+                        <div class="col-md-4 col-sm-12 mb-2">
+                            <div class="form-group">
+                                <label class="form-label">Select Company <span class="text-danger">*</span></label>
+                                <select id="company_id"
+                                    class="form-control select2 @error('company_id') is-invalid @enderror" name="company_id"
+                                    required>
+                                    <option value="">Select Company</option>
+                                    @foreach ($companies as $id => $name)
+                                        <option value="{{ $id }}"
+                                            {{ $selectedCompanyId == $id ? 'selected' : '' }}>
+                                            {{ $name }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+
+                                @error('company_id')
+                                    <span class="invalid-feedback"><strong>{{ $message }}</strong></span>
+                                @enderror
+                            </div>
+                        </div>
+                    @else
+                        <input type="hidden" class="form-control search_by_company" name="company_id"
+                            value="{{ $company_id }}" />
+                    @endif
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label"> Name <span class="text-danger">*</span> </label>
+                            <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
+                                name="name" value="{{ isset($edit?->name) ? $edit?->name : old('name') }}"
+                                autocomplete="name" autofocus placeholder="Enter Name">
+
+                            @error('name')
+                                <span class="invalid-feedback">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-control select2 w-100 @error('status') is-invalid @enderror" name="status"
+                                required>
+                                <option disabled selected>Select Status</option>
+                                @foreach (['active', 'inactive'] as $status)
+                                    <option value="{{ $status }}"
+                                        @if (isset($edit)) @if ($edit->status == $status) {{ 'selected' }} @endif
+                                    @else @if (old('status', 'active') == $status) {{ 'selected' }} @endif @endif> {{ ucfirst($status) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="divider">
+                        <hr />
+                    </div>
+                    <div class="col-md-12 text-center">
+                        <button type="submit" class="btn btn-success mt-1 mb-1">
+                            {{ isset($edit) ? 'Update' : 'Submit' }}
+                        </button>
+                        <a href="{{ route($route . '.index') }}" class="btn btn-danger mt-1 mb-1">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    @if (!$company_id)
+        @include('utils.getCompany')
+    @endif
+@endsection
